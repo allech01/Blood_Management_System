@@ -1,244 +1,197 @@
-Introduction to Database System-Lab
-(CSDB2311)
-Project Title: Database of Pharmacy System
-Submitted to
-Ms. Asma 
-Submitted by
-Syed Muhammad Ali L1F22BSCS0559
- Faizan Aslam L1F22BSCS0547
- Nurooz Amin L1F22BSCS0541
-Section: D-12
-Dated: June 26,2024.
-SQL QUERY OF PROJECT 
-CREATE DATABASE PharmacySystem;
-USE PharmacySystem;
-create table Inventory(
-Inventory_ID varchar(10) Primary key,
-Manager_Name char(100) default null,
-Manager_ID varchar(14) unique Not Null ,
-Location varchar(100) default null,
-Manager_contact varchar(15) default null
-);
-create table Medication (
-Medication_ID varchar(10) Primary key,
-Medicine_name varchar(100) not null,
-Price Decimal(10,2) ,
-Manufacture varchar(100) default null,
-Dosage_form varchar(100) ,
-Storage_condition varchar(100) default 'Room Temperature',
-Exp_date Date default null
-);
-create table Medical_Devices (
-Device_ID varchar(10) Primary key,
-Device_Name varchar(100) not null,
-Price Decimal(10,2) default null,
-Type varchar(100) default null,
-Manufacture varchar(100) default null
-);
-create table Pharmacists (
-Pharmacist_ID varchar(10) Primary Key,
-Pharmacist_Name varchar(100),
-Experience varchar(10),
-Email varchar(50) default null,
-Qualification varchar(100) default 'Graduate',
-Shift varchar(50) default null,
-Phone_number varchar(15)
-);
-create table Transaction (
-Transaction_ID varchar(10) Primary Key,
-Payment_Method varchar(15),
-Transaction_Date Date,
-Discount Decimal(10,2),
-Status varchar(10)
-);
-create table Patient (
-Patient_ID varchar (10) Primary Key,
-Patient_name varchar(100) not null,
-Contact varchar(15) default null,
-DOB Date ,
-Address varchar (150) default null,
-Medical_insurance varchar(100) default 'No'
-);
-create table Prescription (
-Prescription_ID varchar(10) primary key,
-Physician_Name varchar(100) default null,
-Dosage_Instruction varchar(100) default null,
-Duration varchar(100) default null,
-Date date,
-Patient_ID varchar (10) not null,
-foreign Key (Patient_ID) References Patient(Patient_ID)
-on update cascade on delete cascade
-);
-create table SaleReceipt (
-Sales_ID varchar(10) Primary Key,
-SalesFeedback varchar(100) default null,
-sold_date Date,
-Total_item int default 0,
-Total_Price Decimal(10,2),
-Pharmacist_ID varchar (10) not null,
-Transaction_ID varchar(10) not null,
-Prescription_ID varchar(10) not null,
-foreign Key (Pharmacist_ID) References Pharmacists(Pharmacist_ID)
-on update cascade on delete cascade,
-foreign Key (Transaction_ID) References Transaction(Transaction_ID)
-on update cascade on delete cascade,
-foreign Key (Prescription_ID) References Prescription(Prescription_ID)
-on update cascade on delete cascade
-);
-create table Inventory_Store (
-Store_ID varchar(10) primary key,
-Exp_date Date,
-Recieved_Date Date,
-Medication_ID varchar(10) not null,
-Device_ID varchar(10) not Null,
-Inventory_ID varchar(10) not null,
-foreign Key (Medication_ID) References Medication(Medication_ID)
-on update cascade on delete cascade,
-foreign Key (Device_ID) References Medical_Devices(Device_ID)
-on update cascade on delete cascade,
-foreign Key (Inventory_ID) References Inventory(Inventory_ID)
-on update cascade on delete cascade
-);
-Create table Receipt (
-Receipt_ID varchar(10) Primary key,
-Medication_ID varchar (10) not null,
-Device_ID varchar (10) not null,
-Sales_ID varchar(10) not null,
-foreign Key (Medication_ID) References Medication(Medication_ID)
-on update cascade on delete cascade,
-foreign Key (Device_ID) References Medical_Devices(Device_ID)
-on update cascade on delete cascade,
-foreign Key (sales_ID) References SaleReceipt(Sales_ID)
-on update cascade on delete cascade
-);
-create table Precripe_Medication (
-Medication_ID varchar (10) not null,
-Prescription_ID varchar(10) not null,
-foreign Key (Prescription_ID) References Prescription(Prescription_ID)
-on update cascade on delete cascade,
-foreign Key (Medication_ID) References Medication(Medication_ID)
-on update cascade on delete cascade
-);
--- Insert data into Inventory table
-INSERT INTO Inventory (Inventory_ID, Manager_Name, Manager_ID, Location, 
-Manager_contact)
-VALUES 
-('INV003', 'Ali Khan', 'MGR001', 'Karachi', 1234567890),
-('INV004', 'Sara Ahmed', 'MGR002', 'Lahore', 1234567891),
-('INV005', 'Zain Khan', 'MGR003', 'Islamabad', 1234567892),
-('INV006', 'Sana Riaz', 'MGR004', 'Peshawar', 1234567893),
-('INV007', 'Usman Tariq', 'MGR005', 'Quetta', 1234567894);
--- Insert data into Medication table
-INSERT INTO Medication (Medication_ID, Medicine_name, Price, Manufacture, 
-Dosage_form, Storage_condition, Exp_date)
-VALUES 
-('MED003', 'Paracetamol', 50.00, 'Getz Pharma', 'Tablet', 'Room Temperature', '2025-
-12-31'),
-('MED004', 'Amoxicillin', 120.00, 'Searle Company', 'Capsule', 'Refrigerated', 
-'2024-06-30'),
-('MED005', 'Ibuprofen', 70.00, 'PharmEvo', 'Tablet', 'Room Temperature', '2025-11-
-30'),
-('MED006', 'Cetirizine', 90.00, 'Getz Pharma', 'Tablet', 'Room Temperature', '2025-
-10-31'),
-('MED007', 'Azithromycin', 200.00, 'Pfizer', 'Capsule', 'Room Temperature', '2024-
-08-15');
--- Insert data into Medical_Devices table
-INSERT INTO Medical_Devices (Device_ID, Device_Name, Price, Type, Manufacture)
-VALUES 
-('DEV003', 'Blood Pressure Monitor', 3000.00, 'Digital', 'Omron'),
-('DEV004', 'Glucose Meter', 2500.00, 'Digital', 'Accu-Chek'),
-('DEV005', 'Thermometer', 500.00, 'Digital', 'Braun'),
-('DEV006', 'Pulse Oximeter', 1500.00, 'Digital', 'Beurer'),
-('DEV007', 'Nebulizer', 4000.00, 'Electric', 'Philips');
--- Insert data into Pharmacists table
-INSERT INTO Pharmacists (Pharmacist_ID, Pharmacist_Name, Experience, Email, 
-Qualification, Shift, Phone_number)
-VALUES 
-('PHA003', 'Asim Raza', '5 years', 'asim.raza@example.com', 'Pharm.D', 'Morning', 
-3216599870),
-('PHA004', 'Nida Sheikh', '3 years', 'nida.sheikh@example.com', 'Pharm.D', 
-'Evening', 3216549871),
-('PHA005', 'Ahmed Faraz', '2 years', 'ahmed.faraz@example.com', 'Pharm.D', 'Night', 
-3216549872),
-('PHA006', 'Sarah Ali', '4 years', 'sarah.ali@example.com', 'Pharm.D', 'Morning', 
-3216549873),
-('PHA007', 'Usman Malik', '6 years', 'usman.malik@example.com', 'Pharm.D', 
-'Evening', 3216549874);
--- Insert data into Transaction table
-INSERT INTO Transaction (Transaction_ID, Payment_Method, Transaction_Date, Discount, 
-Status)
-VALUES 
-('TRN003', 'Cash', '2024-06-25', 5.00, 'Completed'),
-('TRN004', 'Credit Card', '2024-06-26', 0.00, 'Pending'),
-('TRN005', 'Debit Card', '2024-06-27', 2.00, 'Completed'),
-('TRN006', 'Cash', '2024-06-28', 0.00, 'Completed'),
-('TRN007', 'Online Payment', '2024-06-29', 3.00, 'Pending');
--- Insert data into Patient table
-INSERT INTO Patient (Patient_ID, Patient_name, Contact, DOB, Address, 
-Medical_insurance)
-VALUES 
-('PAT003', 'Hassan Ali', 9876543210, '1990-01-01', '123 Street, Karachi', 'Yes'),
-('PAT004', 'Maira Khan', 9876543211, '1985-05-12', '456 Avenue, Lahore', 'No'),
-('PAT005', 'Ayesha Ahmed', 9876543212, '1992-03-15', '789 Boulevard, Islamabad', 
-'Yes'),
-('PAT006', 'Shoaib Akhtar', 9876543213, '1988-07-21', '101 Road, Peshawar', 'No'),
-('PAT007', 'Naveed Abbas', 9876543214, '1995-09-10', '202 Lane, Quetta', 'Yes');
--- Insert data into Prescription table
-INSERT INTO Prescription (Prescription_ID, Physician_Name, Dosage_Instruction, 
-Duration, Date, Patient_ID)
-VALUES 
-('PRC003', 'Dr. Ahmed Ali', 'Take one tablet daily', '7 days', '2024-06-25', 
-'PAT003'),
-('PRC004', 'Dr. Sarah Khan', 'Take two capsules daily', '10 days', '2024-06-26', 
-'PAT004'),
-('PRC005', 'Dr. Ali Raza', 'Apply ointment twice daily', '5 days', '2024-06-27', 
-'PAT005'),
-('PRC006', 'Dr. Imran Ali', 'Take one tablet twice daily', '14 days', '2024-06-28', 
-'PAT006'),
-('PRC007', 'Dr. Nadia Sheikh', 'Inhale once daily', '30 days', '2024-06-29', 
-'PAT007');
--- Insert data into SaleReceipt table
-INSERT INTO SaleReceipt (Sales_ID, SalesFeedback, sold_date, Total_item, 
-Total_Price, Pharmacist_ID, Transaction_ID, Prescription_ID)
-VALUES 
-('SAL003', 'Good service', '2024-06-25', 2, 170.00, 'PHA003', 'TRN003', 'PRC003'),
-('SAL004', 'Quick delivery', '2024-06-26', 1, 120.00, 'PHA004', 'TRN004', 'PRC004'),
-('SAL005', 'Excellent care', '2024-06-27', 3, 190.00, 'PHA005', 'TRN005', 'PRC005'),
-('SAL006', 'Friendly staff', '2024-06-28', 2, 210.00, 'PHA006', 'TRN006', 'PRC006'),
-('SAL007', 'Fast service', '2024-06-29', 4, 250.00, 'PHA007', 'TRN007', 'PRC007');
--- Insert data into Inventory_Store table
-INSERT INTO Inventory_Store (Store_ID, Exp_date, Recieved_Date, Medication_ID, 
-Device_ID, Inventory_ID)
-VALUES 
-('STR003', '2025-12-31', '2024-06-01', 'MED003', 'DEV003', 'INV003'),
-('STR004', '2024-06-30', '2024-06-10', 'MED004', 'DEV004', 'INV004'),
-('STR005', '2025-11-30', '2024-06-15', 'MED005', 'DEV005', 'INV005'),
-('STR006', '2025-10-31', '2024-06-20', 'MED006', 'DEV006', 'INV006'),
-('STR007', '2024-08-15', '2024-06-25', 'MED007', 'DEV007', 'INV007');
--- Insert data into Receipt table
-INSERT INTO Receipt (Receipt_ID, Medication_ID, Device_ID, Sales_ID)
-VALUES 
-('RCT003', 'MED003', 'DEV003', 'SAL003'),
-('RCT004', 'MED004', 'DEV004', 'SAL004'),
-('RCT005', 'MED005', 'DEV005', 'SAL005'),
-('RCT006', 'MED006', 'DEV006', 'SAL006'),
-('RCT007', 'MED007', 'DEV007', 'SAL007');
--- Insert data into Precripe_Medication table
-INSERT INTO Precripe_Medication (Medication_ID, Prescription_ID)
-VALUES 
-('MED003', 'PRC003'),
-('MED004', 'PRC004'),
-('MED005', 'PRC005'),
-('MED006', 'PRC006'),
-('MED007', 'PRC007');
-select * from Inventory;
-select * from Medication;
-select * from Medical_Devices;
-select * from Pharmacists;
-select * from Transaction;
-select * from Patient;
-select * from Prescription;
-select * from SaleReceipt;
-select * from Inventory_Store;
-select * from Receipt;
-select * from Precripe_Medication;
+# BLOOD BANK MANAGEMENT SYSTEM
+
+## Project Overview
+
+This project focuses on the development of a Blood Bank Management System. Blood banks are crucial for collecting, storing, and providing blood to patients in need. The system aims to address the challenges of managing blood quality and tracking donors in existing manual systems, which are often time-consuming and inefficient. The 'Blood Bank Management System' automates the distribution of blood, making it easier to search for available blood and saving significant time compared to manual processes. It is designed to hoard, operate, recover, and analyze information related to administrative and inventory management within a blood bank, aiming for a manageable, time-effective, cost-effective, and flexible solution that requires less manpower. 
+
+## Literature Work
+
+The 'Blood Donation Management System' shares similarities with 'Organ Donation Management System' and 'Charity Management System' databases. 
+
+* **Organ Donation Management System**: This database automates organ donation to patients in need. [cite_start]It is maintained by hospitals and tracks available organs, donors, and acceptors, making it functionally similar to a Blood Bank Management System. 
+* **Charity Management System**: This system tracks monetary donations to various organizations. [cite_start]It involves donors (individuals donating money) and acceptors (organizations requesting or receiving money), operating similarly to the Blood Bank Management System in its core functionality. 
+
+## ER Diagram and Relation Between Entities
+
+An Entity-Relationship (ER) Diagram was created using Creately to visualize the entities and their relationships within the Blood Bank Management System. 
+
+### Information of Entities
+
+In total, there are eight entities: 
+
+1.  **Blood_Donor**: Stores information about individuals who donate blood. Attributes include a unique donor ID (primary key), name, age, sex, blood group, phone number, and registration date. 
+2.  **Recipient**: Stores information about individuals who receive blood from the blood bank. Attributes include a unique recipient ID (primary key), name, age, sex, needed blood group, needed blood quantity, phone number, and registration date. 
+3.  **BB_Manager**: Represents the blood bank manager responsible for available blood samples and handling requests from recipients and hospitals.Attributes include a unique manager ID (primary key), name, and phone number. 
+4.  **Recording_Staff**: Records blood donor and recipient information.Attributes include a unique staff ID (primary key), name, and phone number. 
+5.  **BloodSpecimen**: Stores information about blood samples available in the blood bank.Attributes include a specimen number and blood group (together forming a primary key), and status (indicating contamination). 
+6.  **DiseaseFinder**: Stores information about doctors who check blood for contamination.Attributes include a unique ID (primary key), name, and phone number. 
+7.  **Hospital_Info**: Stores information about hospitals.Attributes include hospital ID and needed blood group (together forming a primary key), hospital name, and required blood quantity. 
+8.  **City**: Stores information about cities where donors, recipients, and hospitals are located.Attributes include a unique city ID (primary key) and city name. 
+
+### Relationship Between Entities
+
+[cite_start]The relationships between entities are as follows: 
+
+1.  **City and Hospital_Info**: One-to-many relationship ("in").A city can have many hospitals, but one hospital belongs to one city. 
+2.  **City and Blood_Donor**: One-to-many relationship ("lives in").Many donors can live in a city, but one donor belongs to one city. 
+3.  **City and Recipient**: One-to-many relationship ("lives in").Many recipients can live in a city, but one recipient belongs to one city. 
+4.  **Recording_Staff and Donor**: One-to-many relationship ("registers").One recording staff can register many donors, but one donor registers with one recording officer. 
+5.  **Recording_Staff and Recipient**: One-to-many relationship ("records").One recording staff can record many recipients, but one recipient is recorded by one recording officer. 
+6.  **Hospital_Info and BB_Manager**: One-to-many relationship ("gives order to").One blood bank manager can handle requests from many hospitals, but one hospital places a request to one blood bank manager. 
+7.  **BB_Manager and Blood Specimen**: One-to-many relationship ("deals with specimen").One blood bank manager can manage many blood specimens, and one specimen is managed by one manager. 
+8.  **Recipient and BB_Manager**: One-to-many relationship ("requests to").One recipient can request blood from one manager, and one manager can handle requests from many recipients. 
+9.  **Disease_finder and Blood Specimen**: One-to-many relationship ("checks").A disease finder can check many blood samples, and one blood sample is checked by one disease finder. 
+
+## Relational Schemas
+
+The following tables represent the relational schemas: 
+
+### Donor Table
+
+| Attribute Name | Description        | Type    |
+| :------------- | :----------------- | :------ |
+| bd\_id         | Blood Donor's Id   | int     |
+| bd\_Name       | Blood Donor's Name | varchar |
+| bd\_age        | Blood Donor's Age  | int     |
+| bd\_sex        | Blood Donor's Sex  | char    |
+| bd\_bgrp       | Blood Donor's blood group | varchar |
+| bd\_regdate    | Registration Date of Donor | date    |
+| reco\_id       | Id of Recording Staff | int     |
+| city\_id       | City Id            | int     |
+
+The `reco_id` (from Recording Staff) and `city_id` (from City) are used as foreign keys due to their one-to-many relationships with the Donor table. 
+
+### Recipient Table
+
+| Attributes Name | Description             | Type    |
+| :-------------- | :---------------------- | :------ |
+| reci\_id        | Recipient's Id          | int     |
+| reci\_Name      | Recipient's Name        | varchar |
+| reci\_age       | Recipient's age         | int     |
+| reci\_sex       | Recipient's sex         | char    |
+| reci\_bgrp      | Recipient's blood group | varchar |
+| reci\_bqnty     | Recipient's blood quantity | int     |
+| reci\_reg\_date | Recipient's registration date | date    |
+| reco\_id        | Recording Staff's Id    | int     |
+| city\_id        | City's unique Id        | int     |
+| M\_id           | Blood Bank Manager's Id | int     |
+
+The `reco_id` (from Recording Staff), `city_id` (from City), and `M_id` (from Blood Bank Manager) are used as foreign keys due to their one-to-many relationships with the Recipient table. 
+
+### City Table
+
+| Attributes Name | Description     | Type    |
+| :-------------- | :-------------- | :------ |
+| city\_id        | City's unique id | int     |
+| city\_name      | City's name     | varchar |
+
+The primary key of the City table (`city_id`) is used as a foreign key in the Recipient, Donor, and Hospital Info tables due to their one-to-many relationships. 
+
+### Recording Staff Table
+
+| Attributes Name | Description            | Type     |
+| :-------------- | :--------------------- | :------- |
+| reco\_id        | Recording Staff's id   | int      |
+| reco\_name      | Recording Staff's Name | Varchar  |
+| reco\_PhNo      | Recording Staff's Phone number | bigint |
+
+The primary key of the Recording Staff table (`reco_id`) is used as a foreign key in the Blood Donor and Recipient tables due to their one-to-many relationships. 
+
+### Blood Specimen Table
+
+| Attributes Name | Description            | Type    |
+| :-------------- | :--------------------- | :------ |
+| specimen\_No    | Blood Sample's unique id | int     |
+| b\_grp          | Blood Group            | varchar |
+| status          | Whether blood is pure or not? | int     |
+| M\_id           | Blood Bank Manager's id | int     |
+| dfind\_id       | Disease Finder's unique id | int     |
+
+The `dfind_id` (from Disease Finder) and `M_id` (from Blood Bank Manager) are used as foreign keys due to their one-to-many relationships with the Blood Specimen table. 
+
+### Disease Finder Table
+
+| Attributes Name | Description            | Type    |
+| :-------------- | :--------------------- | :------ |
+| dfind\_id       | Disease Finder's unique id | Int     |
+| dfind\_name     | Disease Finder's name  | varchar |
+| dfind\_phNo     | Disease Finder's phone number | bigint |
+
+The primary key of the Disease Finder table (`dfind_id`) is used as a foreign key in the Blood Specimen table due to its one-to-many relationship. 
+
+### Blood Bank Manager Table
+
+| Attributes Name | Description           | Type    |
+| :-------------- | :-------------------- | :------ |
+| M\_id           | Blood Bank Manager's id | int     |
+| m\_name         | Blood Bank Manager's name | varchar |
+| m\_phNo         | Blood Bank Manager's phone no | bigint |
+
+The primary key of the Blood Bank Manager table (`M_id`) is used as a foreign key in the Blood Specimen, Recipient, and Hospital Info tables due to their one-to-many relationships. 
+
+### Hospital Info Table
+
+| Attributes Name    | Description              | Type    |
+| :----------------- | :----------------------- | :------ |
+| hosp\_id           | Hospital’s unique id     | int     |
+| hosp\_name         | Hospital’s name          | varchar |
+| hosp\_needed\_Bgrp | Blood group needed by hospital | varchar |
+| hosp\_needed\_qnty | Quantity of blood group needed | int     |
+| city\_id           | City’s unique id         | int     |
+| M\_id              | Blood Bank Manger’s id   | int     |
+
+The `city_id` (from City) and `M_id` (from Blood Bank Manager) are used as foreign keys due to their one-to-many relationships with the Hospital Info table. 
+
+## Normalization
+
+Normalization rules are divided into First Normal Form (1NF), Second Normal Form (2NF), and Third Normal Form (3NF). 
+
+* **First Normal Form (1NF)**: A table is in 1NF if it has only single (atomic) valued attributes/columns, values in a column are of the same domain, all columns have unique names, and the order of data storage does not matter. 
+* **Second Normal Form (2NF)**: A table is in 2NF if it is in 1NF and does not have Partial Dependency. 
+* **Third Normal Form (3NF)**: A table is in 3NF if it is in 2NF and does not have Transitive Dependency. 
+
+The document details the normalization of each table, ensuring they meet 3NF where applicable. [cite_start]For instance, the `Hospital_Info` table was split into `Hospital_1` and `Hospital_2` to achieve 2NF. 
+
+## SQL Implementation
+
+The SQL implementation includes `CREATE TABLE` and `INSERT` statements for all entities: `BB_Manager`, `Blood_Donor`, `BloodSpecimen`, `City`, `DiseaseFinder`, `Hospital_Info_1`, `Hospital_Info_2`, `Recipient`, and `Recording_Staff`. 
+
+## Sample SQL Queries
+
+The document provides examples of SQL queries: 
+
+1.  **Create a View of recipients and donors names having the same blood group registered on the same date.** 
+    ```sql
+    CREATE VIEW Blood_Recipient_SameBGrp AS
+    SELECT Blood_Donor.bd_name, Recipient.reci_name, Recording_Staff.reco_Name
+    FROM Recording_Staff
+    INNER JOIN Blood_Donor ON Recording_Staff.reco_ID = Blood_Donor.reco_ID
+    INNER JOIN Recipient ON Recording_Staff.reco_ID = Recipient.reco_ID
+    WHERE Blood_Donor.bd_Bgroup = Recipient.reci_Brgp
+    AND Blood_Donor.bd_reg_date = Recipient.reci_reg_date;
+    ```
+    Output: `SELECT * FROM Blood_Recipient_SameBGrp;` 
+
+2.  **Show the blood specimen verified by disease finder which are pure (status=1).** 
+    ```sql
+    SELECT specimen_number, b_group
+    FROM BloodSpecimen, DiseaseFinder
+    WHERE BloodSpecimen.dfind_ID = DiseaseFinder.dfind_ID
+    AND DiseaseFinder.dfind_name = 'Mark'
+    AND status = 1;
+    ```
+
+
+3.  **Show the pure blood specimen handled by BB_Manager who also handles a recipient needing the same blood group along with the details of the BB_Manager and Recipient.** 
+    ```sql
+    SELECT BB_Manager.M_id, mName, Recipient.reci_name, Recipient.reci_Brgp, b_group
+    FROM BB_Manager, Recipient, BloodSpecimen
+    WHERE BB_Manager.M_id = Recipient.M_id
+    AND BB_Manager.M_id = BloodSpecimen.M_id
+    AND BloodSpecimen.b_group = Recipient.reci_Brgp
+    AND BloodSpecimen.status = 1;
+    ```
+
+
+---
+**Note:** The conclusion section was mentioned in the table of contents but its content was not included in the provided document.
