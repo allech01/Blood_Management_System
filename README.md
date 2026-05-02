@@ -7,10 +7,10 @@ A production-grade relational data model that turns manual blood-bank tracking i
 ## Screenshots
 
 ![Blood bank ER diagram](blood-management.png)
-*Latest ER diagram showing all entities, primary keys, and relationships (replace if the schema changes).*
+*ER diagram showing all entities, primary keys, and relationships across the blood-bank system.*
 
 ![Blood bank schema/overview](blood.png)
-*Schema overview or sample data view highlighting donors, recipients, and specimen status.*
+*Database schema snapshot with donor, recipient, and specimen-status records visible.*
 
 ## Key Features (STAR)
 
